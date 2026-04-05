@@ -1,0 +1,28 @@
+# Secrets
+.env
+
+# Datos de runtime (no versionables)
+data/
+
+# Notas locales
+notes/
+
+# Frontend
+frontend/node_modules/
+frontend/.svelte-kit/
+frontend/build/
+frontend/.env
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+backend/__pycache__/
+
+# Entorno virtual
+venv/
+.venv/
+
+# Sistema
+.DS_Store
+*.log

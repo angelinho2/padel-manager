@@ -1,0 +1,51 @@
+# ══════════════════════════════════════════════════════════════
+# Arquitectura:
+#   Internet → Caddy (80/443)
+#     ├── eingel.me        → FastAPI blog (8000) + Apache HTML (8090)
+#     └── padel.eingel.me  → Docker: backend (8001) + frontend (3001)
+# ══════════════════════════════════════════════════════════════
+
+eingel.me {
+	# HSTS: el navegador recuerda usar HTTPS siempre (1 año)
+	# Esto hace que eingel.me/private abra directamente en HTTPS
+	header Strict-Transport-Security "max-age=31536000; includeSubDomains"
+
+	# Autenticación → FastAPI (8000)
+	handle /auth/* {
+		reverse_proxy localhost:8000
+	}
+
+	# API de posts → FastAPI (8000)
+	handle /posts/* {
+		reverse_proxy localhost:8000
+	}
+
+	# Imágenes subidas → FastAPI (8000)
+	handle /uploads/* {
+		reverse_proxy localhost:8000
+	}
+
+	# Todo lo demás (/, /admin, /private, estáticos) → Apache (8090)
+	handle {
+		reverse_proxy localhost:8090
+	}
+
+	log {
+		output file /var/log/caddy/eingel.log
+	}
+}
+
+padel.eingel.me {
+	handle /api/* {
+		uri strip_prefix /api
+		reverse_proxy localhost:8001
+	}
+
+	handle {
+		reverse_proxy localhost:3001
+	}
+
+	log {
+		output file /var/log/caddy/padel.log
+	}
+}

@@ -1,0 +1,23 @@
+services:
+
+  # ── Backend FastAPI ────────────────────────────────────────────
+  # Escucha en 8001 (el 8000 está ocupado por otro servicio)
+  backend:
+    build: ./backend
+    ports:
+      - "127.0.0.1:8001:8000"   # Solo accesible localmente (Caddy del host hace el proxy)
+    volumes:
+      - ./data:/app/data
+    env_file: .env
+    restart: unless-stopped
+
+  # ── Frontend SvelteKit ─────────────────────────────────────────
+  frontend:
+    build: ./frontend
+    ports:
+      - "127.0.0.1:3001:80"     # Solo accesible localmente
+    restart: unless-stopped
+
+  # Caddy corre en el HOST (no en Docker) para poder gestionar
+  # tanto el padel como las webs de Apache existentes.
+  # Ver: /etc/caddy/Caddyfile
