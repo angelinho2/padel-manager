@@ -374,7 +374,16 @@
 		{#each jugadoresOrdenados as jug}
 		<div class="jugador-cobro" class:pagado={jug.pagado}>
 
-		<!-- Info del jugador (tap → extras) -->
+		<!-- Botón semana que viene — izquierda, independiente -->
+			<button
+				class="btn-semana-lateral"
+				class:activo={semanaQueViene.has(jug.inscripcion_id)}
+				onclick={() => toggleSemana(jug.inscripcion_id)}
+				aria-label="Apuntar semana que viene"
+				title="Semana que viene"
+			>📋</button>
+
+			<!-- Info del jugador (tap → extras) -->
 			<button class="jugador-info" onclick={() => abrirExtras(jug)}>
 				<span class="pista-chip pista-{jug.nivel}">{jug.nivel}</span>
 				<div class="jugador-texto">
@@ -398,7 +407,7 @@
 				</div>
 			</button>
 
-			<!-- Dos botones pago + el de semana que viene -->
+			<!-- Botones pago: tarjeta y efectivo en vertical -->
 			<div class="btns-cobro">
 				<button
 					class="btn-cobro btn-tarjeta"
@@ -414,13 +423,6 @@
 					aria-label="Pagar con efectivo"
 					title="Efectivo"
 				>💵</button>
-				<button
-					class="btn-cobro btn-semana"
-					class:activo={semanaQueViene.has(jug.inscripcion_id)}
-					onclick={() => toggleSemana(jug.inscripcion_id)}
-					aria-label="Apuntar semana que viene"
-					title="Semana que viene"
-				>📋</button>
 			</div>
 		</div>
 		{/each}
@@ -527,6 +529,30 @@
 .jugador-cobro.pagado {
 	border-color: rgba(34,197,94,.3);
 	opacity: .75;
+}
+
+/* Botón semana — columna izquierda */
+.btn-semana-lateral {
+	width: 44px;
+	flex-shrink: 0;
+	border: none;
+	border-right: 1px solid var(--bg-3);
+	background: transparent;
+	font-size: 1.1rem;
+	cursor: pointer;
+	transition: all .12s;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	opacity: .35;
+	filter: grayscale(1);
+}
+.btn-semana-lateral:active { transform: scale(.88); }
+.btn-semana-lateral.activo {
+	opacity: 1;
+	filter: none;
+	background: rgba(168,85,247,.15);
+	border-right-color: rgba(168,85,247,.3);
 }
 
 .jugador-info {
@@ -652,10 +678,9 @@
 /* Badge extra colors */
 .badge-blue   { background: rgba(59,130,246,.2);  color: #60a5fa; }
 
-/* ── Semana que viene ────────────────────────────────── */
-.btn-semana.activo { background: rgba(168,85,247,.2) !important; filter: none; opacity: 1; }
+/* ── Semana que viene ──────────────────── */
+/* (colors handled by btn-semana-lateral above) */
 .btn-tarjeta  { border-bottom: 1px solid var(--bg-3); }
-.btn-semana   { border-top: 1px solid var(--bg-3); }
 
 .semana-panel {
 	margin-top: 1rem;

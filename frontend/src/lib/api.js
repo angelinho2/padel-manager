@@ -92,6 +92,7 @@ export const jugadores = {
 	crear: (datos)          => post('/jugadores/', datos),
 	obtener: (id)           => get(`/jugadores/${id}`),
 	actualizar: (id, datos) => patch(`/jugadores/${id}`, datos),
+	eliminar: (id)          => del(`/jugadores/${id}`),
 	historial: (id)         => get(`/jugadores/${id}/historial`)
 };
 

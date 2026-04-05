@@ -2,10 +2,11 @@
 routers/jugadores.py — Endpoints CRUD para gestión de jugadores
 
 Endpoints:
-  GET    /jugadores          — Listar jugadores (filtros: activo, buscar por nombre)
-  POST   /jugadores          — Crear nuevo jugador
-  GET    /jugadores/{id}     — Detalle de un jugador
-  PATCH  /jugadores/{id}     — Editar jugador (parcial, solo los campos enviados)
+  GET    /jugadores               — Listar jugadores (filtros: activo, buscar por nombre)
+  POST   /jugadores               — Crear nuevo jugador
+  GET    /jugadores/{id}          — Detalle de un jugador
+  PATCH  /jugadores/{id}          — Editar jugador (parcial)
+  DELETE /jugadores/{id}          — Marcar jugador como inactivo (soft delete)
   GET    /jugadores/{id}/historial — Historial completo del jugador
 
 Todos los endpoints requieren autenticación JWT (get_current_user).
@@ -128,6 +129,25 @@ async def actualizar_jugador(
     session.commit()
     session.refresh(jugador)
     return jugador
+
+
+@router.delete("/{jugador_id}", status_code=204)
+async def eliminar_jugador(
+    jugador_id: int,
+    session: Session = Depends(get_session),
+    _: str = Depends(get_current_user),
+):
+    """
+    Marca al jugador como inactivo (soft delete).
+    No se borran sus datos para preservar el historial de inscripciones.
+    """
+    jugador = session.get(Jugador, jugador_id)
+    if not jugador:
+        raise HTTPException(status_code=404, detail="Jugador no encontrado")
+
+    jugador.activo = False
+    session.add(jugador)
+    session.commit()
 
 
 @router.get("/{jugador_id}/historial")

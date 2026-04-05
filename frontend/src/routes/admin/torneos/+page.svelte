@@ -85,9 +85,12 @@
 <div class="page">
 	<div class="page-header">
 		<h1>🏆 Torneos</h1>
-		<button class="btn btn-primary btn-sm" onclick={() => showForm = !showForm}>
-			{showForm ? 'Cancelar' : '＋ Nuevo'}
-		</button>
+		<div style="display:flex;gap:.4rem">
+			<a href="/admin/jugadores" class="btn btn-ghost btn-sm">👤 Jugadores</a>
+			<button class="btn btn-primary btn-sm" onclick={() => showForm = !showForm}>
+				{showForm ? 'Cancelar' : '＋ Nuevo'}
+			</button>
+		</div>
 	</div>
 
 	{#if showForm}
